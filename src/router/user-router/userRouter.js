@@ -1,0 +1,22 @@
+import { Router } from "express";
+export const userRouter = Router();
+import { userSignUp } from "../../controller/user/user-signUp";
+import { verifyToken } from "../../middleware/verify-token";
+import { userVerify } from "../../controller/user/user-verify";
+import { userLogin } from "../../controller/user/user-login";
+import { userUpdate } from "../../controller/user/user-update";
+import { deleteUser } from "../../controller/user/user-delete";
+import { permit } from "../../middleware/permit";
+import { role } from "../../middleware/role";
+import { pendingUsers } from "../../controller/user/user-pending";
+import { userApproved } from "../../controller/user/user-approved";
+import { userRejected } from "../../controller/user/user-rejected";
+
+userRouter.post("/signup", userSignUp);
+userRouter.get("/pending-users", pendingUsers);
+userRouter.patch("/approved/:id", userApproved);
+userRouter.patch("/verify", verifyToken, userVerify);
+userRouter.get("/login", userLogin);
+userRouter.patch("/update/:id", userUpdate);
+userRouter.delete("/delete/:id", role, permit(["admin"]), deleteUser);
+userRouter.patch("/reject/:id", userRejected);
